@@ -18,11 +18,8 @@ class Users extends REST_Controller {
         } else if ($email) {
             $result = $this->Users_model->get("email", $email);
         }
-        if (array_key_exists("status", $result)) {
-            $this->response($result, 200);
-        } else {
-            $this->response($result, 200);
-        }   
+        $this->response($result, 200);
+  
     }
 
     public function index_post(){

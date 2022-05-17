@@ -55,6 +55,7 @@ class NoteSection extends Component {
     }
 
     async componentDidMount () {
+        let err = false;
         const result = await fetch(window.NOTESAPI + '?' + new URLSearchParams({"user_id": window.userID}),
         {
             "Method": "GET",
@@ -67,10 +68,12 @@ class NoteSection extends Component {
         .then((result) => {
             return result;
         })
-        .catch((err) => err);
+        .catch((err) => {err = true; return err});
 
-        if (result.hasOwnProperty("status")) {
-            this.props.setAlert({type: "failed", text: result.toString()});
+        console.log(result);
+
+        if (err) {
+            this.props.setAlert({type: "failed", text: result.toString()}, false);
         } else {
             this.setState({notes: result, focusNote: result.find((note) => note.id === window.selectedNote)});
         }
@@ -120,8 +123,9 @@ class NoteSection extends Component {
             this.setState({
                 notes: oldNotes
             });
+            this.props.setAlert({type: "success", text: "Changes has been saved."});
           } else {
-              this.props.setAlert({type: "failed", text: result.toString()});
+              this.props.setAlert({type: "failed", text: result.toString()}, false);
           }
     }
 
@@ -139,18 +143,20 @@ class NoteSection extends Component {
           .then((result) => result)
           .catch((err) => err)
 
+          this.selectNote(newNote);
+
         
           if (result.hasOwnProperty("status")) {
             this.setState((prevState) => {
                 var newNotes = [...prevState.notes]
                 window.selectedNote = newNote.id;
-                newNotes.map((note) => note.selected = false);
                 newNotes.push(newNote);
-                return {notes: newNotes, focusNote: newNote, showDialog: false};
+                return {notes: newNotes, showDialog: false};
             });
             this.scrollToContent();
+            this.props.setAlert({type: "success", text: "New note has been created."})
           } else {
-              this.props.setAlert({type: "failed", text: result.toString()});
+              this.props.setAlert({type: "failed", text: result.toString()}, false);
           }
 
     }
@@ -175,8 +181,10 @@ class NoteSection extends Component {
         .then((result) => result)
         .catch((err) => err);
 
+        console.log(result);
 
         if (result.hasOwnProperty("status")) {
+            this.props.setAlert({type: "success", text: `A note with the title ${this.state.notes.find((note) => note.id === id).title} has been deleted.`})
             this.setState((prevStates) => {
                 const oldNotes = [...prevStates.notes];
                 const oldIndex = oldNotes.indexOf(oldNotes.find((note) => note.id === id));

@@ -36,8 +36,12 @@ export default class Login extends Component {
         })
         .catch((err) => err);
 
-        if (result.hasOwnProperty("status")) {
-            return result["status"] === "success";
+        console.log(result, "WOKWOWK");
+
+        if (result.hasOwnProperty("id")) {
+            return true;
+        } else if (result.hasOwnProperty("status")) {
+            return false;
         }
         this.props.setAlert({type: "failed", text: result.toString()}, false);
         return "alert";
@@ -60,9 +64,14 @@ export default class Login extends Component {
         })
         .catch((err) => err);
 
+        console.log(result, "AA");
 
-        if (result.hasOwnProperty("status")) {
-            return result["status"] === "success";
+
+        if (result.hasOwnProperty("id")) {
+            return true;
+        }
+        else if (result.hasOwnProperty("status")) {
+            return false;
         }
         this.props.setAlert({type: "failed", text: result.toString()}, false);
         return "alert";

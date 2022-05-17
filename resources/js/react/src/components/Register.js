@@ -49,7 +49,6 @@ export default class Register extends Component {
             const result = await this.props.register(this.emailRef.current.value, this.passwordRef.current.value);
             if (result) {
                 this.setState((prevState) => {
-                    console.log(prevState);
                     let errors = {...prevState.errors};
                     if (result === "alert") {
                         errors["alert"] = true;

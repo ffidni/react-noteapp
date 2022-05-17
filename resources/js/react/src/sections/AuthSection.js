@@ -40,25 +40,30 @@ class AuthSection extends Component {
                 } else if (inputs[i].current.dataset.name === "password" ) {
                     password = inputs[i].current.value;
                     if (email) {
-                        var emailValid = this.validateEmail(email);
-                        if (!isRegister && emailValid) {
+                        if (!isRegister) {
                             await validators.validateEmail(email)
                             .then(async (status) => {
-                                if (!status || status !== "alert") {
+                                console.log(status);
+                                if (status === "alert") {
+                                    result["alert"] = true
+                                }
+                                else if (!status) {
                                     result["email"] = "Account is not registered";
                                 } else if (status !== "alert"){
                                     await validators.login(email, password).then((status) => {
-                                        if (!status || status !== "alert") {
+                                        if (status === "alert") {
+                                            result["alert"] = true;
+                                        }
+                                        else if (!status) {
                                             result["password"] = "Password is incorrect";
                                         }
                                     });
-                                } else {
-                                    result["alert"] = true
                                 }
                             })
 
                         }
                         else {
+                            var emailValid = this.validateEmail(email);
                             if (!emailValid) {
                                 result['email'] = "Email is not valid"; 
                             }
@@ -92,6 +97,7 @@ class AuthSection extends Component {
           .then((response) => response.json())
           .then((result) => result)
           .catch((err) => err);
+
 
             if (result.hasOwnProperty("status")) {
                 if (result["status"] === "success") {

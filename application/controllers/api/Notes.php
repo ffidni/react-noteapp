@@ -12,12 +12,7 @@ class Notes extends REST_Controller {
     function index_get(){
         $id = $this->get('user_id');
         $notes = $this->Notes_model->get_notes($id);
-        $status = $this->Notes_model->check_error();
-        if ($status['status'] == 'success') {
-            $this->response($notes, 200);
-        } else {
-            $this->response($status, 200);
-        }
+        $this->response($notes, 200);
     }
 
     function index_post(){

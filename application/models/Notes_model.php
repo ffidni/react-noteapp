@@ -6,12 +6,6 @@
             parent::__construct();
         }
 
-        public function check_error(){
-            if ($this->db->error()["message"] == "") {
-                return array("status" => "success");
-            }
-            return array("status" => $this->db->error()["message"]);
-        }
 
         public function get_notes($id) {
             $this->db->select("notes.id, notes.title, notes.content, notes.category, notes.date")
@@ -22,20 +16,27 @@
             if ($result) {
                 return $result;
             }
-            return $this->check_error();
+            return array("status" => "failed");
         }
         
 
         public function add_note($data) {
             $this->db->insert("notes", $data);
-            return $this->check_error();
+            if ($this->db->insert_id()) {
+                return array("status" => "success");
+            }
+            return array("status" => "failed");
         }
 
         public function update_note($data) {
             unset($data['update']);
             $this->db->where("id", $data["id"]);
             $this->db->update("notes", $data);
-            return $this->check_error();
+            if ($this->db->affected_rows()) {
+                return array("status" => "success");
+            }
+            return array("status" => "failed");
+            
 
         }
 
@@ -45,8 +46,6 @@
             if ($result) {
                 return array("status" => "success");
             }
-            return $this->check_error();
-            
-
+            return array("status" => "failed");
         }
     }

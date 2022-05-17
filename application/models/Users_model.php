@@ -11,11 +11,10 @@
             $this->db->where("password", md5($password));
             $result = $this->db->get("users")->row();
             if ($result) {
-                $_SESSION['account'] = $result;
+                $this->session->set_userdata("account", $result);
                 return $result;
-            } else {
-                return array("status" => "failed");
             }
+            return array("status" => "failed");
         }
 
 
