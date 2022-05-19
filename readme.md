@@ -1,3 +1,3 @@
 # Simple Note Web App
-Created with React.js at the frontend and Codeigniter at the backend
+Created with React.js in the frontend and Codeigniter in the backend
 
